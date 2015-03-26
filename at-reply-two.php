@@ -4,7 +4,7 @@ Plugin Name: @Reply Two
 Plugin URI: http://halfelf.org/plugins/at-reply-two/
 GitHub Plugin URI: ipstenu/at-reply-two
 Description: This plugin allows you to add Twitter-like @reply links to comments.
-Version: 1.0.1
+Version: 1.0.2
 Author: Mika A. Epstein (Ipstenu)
 Author URI: http://halfelf.org
 
@@ -30,7 +30,7 @@ class AtReplyTwoHELF {
 
 	public function admin_notices() {
 
-		if ( !is_null(get_option(thread_comments)) ) {
+		if ( get_option( 'thread_comments' ) != '1' ) {
 
 		$html = sprintf(
 		    '@Reply Two requires threaded comments to function properly. <a href="%s">Update Settings Now</a>',
