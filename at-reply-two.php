@@ -1,7 +1,8 @@
 <?php
 /*
 Plugin Name: @Reply Two
-Plugin URI: http://wordpress.org/extend/plugins/reply-to/
+Plugin URI: http://halfelf.org/plugins/at-reply-two/
+GitHub Plugin URI: ipstenu/at-reply-two
 Description: This plugin allows you to add Twitter-like @reply links to comments.
 Version: 1.0.1
 Author: Mika A. Epstein (Ipstenu)
