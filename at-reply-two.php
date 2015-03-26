@@ -3,7 +3,7 @@
 Plugin Name: @Reply Two
 Plugin URI: http://wordpress.org/extend/plugins/reply-to/
 Description: This plugin allows you to add Twitter-like @reply links to comments.
-Version: 1.0
+Version: 1.0.1
 Author: Mika A. Epstein (Ipstenu)
 Author URI: http://halfelf.org
 
@@ -20,12 +20,32 @@ class AtReplyTwoHELF {
 
     public function init() {
 		if (!is_admin()) {
-			 add_action('comment_form', array( $this, 'r2_reply_js'));
-			 add_filter('comment_reply_link', array( $this,'r2_reply'));
+			 add_action('comment_form', array( $this, 'reply_js'));
+			 add_filter('comment_reply_link', array( $this,'reply'));
+		} else {
+			add_action( 'admin_notices', array( $this, 'admin_notices') );
 		}
 	}
 
-	public function r2_reply_js() {
+	public function admin_notices() {
+
+		if ( !is_null(get_option(thread_comments)) ) {
+
+		$html = sprintf(
+		    '@Reply Two requires threaded comments to function properly. <a href="%s">Update Settings Now</a>',
+		    admin_url('options-discussion.php')
+		);
+
+			?>
+			<div class="error">
+				<p><?php echo $html; ?></p>
+			</div>
+			<?php
+		}
+
+	}
+
+	public function reply_js() {
 	?>
 		<script type="text/javascript">
 			//<![CDATA[
@@ -63,7 +83,7 @@ class AtReplyTwoHELF {
 	<?php
 	}
 
-	public function r2_reply($reply_link) {
+	public function reply($reply_link) {
 		 $comment_ID = '#comment-' . get_comment_ID();
 		 $comment_author = esc_html(get_comment_author());
 		 $r2_reply_link = 'onclick=\'return r2_replyTwo("' . $comment_ID . '", "' . $comment_author . '"),';
