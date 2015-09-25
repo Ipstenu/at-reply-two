@@ -3,7 +3,7 @@ Contributors: Ipstenu
 Tags: reply, at-reply, comments
 Requires at least: 4.0
 Tested up to: 4.3
-Stable tag: 1.0.2
+Stable tag: 2.0
 
 This plugin allows you to add @reply links to comments.
 

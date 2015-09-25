@@ -1,6 +1,8 @@
-at-reply-two
+@Reply Two
 ============
 
-At Reply Two is a fork of @ Reply, whioch is a fork of Custom Smilies.
+This plugin allows you to add Twitter-like @reply links to comments.
 
-It's stripped down to the bones, removed all the add-ons to make it work with non-threaded comments (which were hacky anyway).
+When clicked, those links insert the author name and a link to the comment you are replying to in the text.
+
+This plugin was heavily simplified from the original.

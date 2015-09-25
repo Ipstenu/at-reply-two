@@ -2,41 +2,89 @@
 /*
 Plugin Name: @Reply Two
 Plugin URI: http://halfelf.org/plugins/at-reply-two/
-GitHub Plugin URI: ipstenu/at-reply-two
 Description: This plugin allows you to add Twitter-like @reply links to comments.
-Version: 1.0.2
+Version: 2.0
 Author: Mika A. Epstein (Ipstenu)
 Author URI: http://halfelf.org
 
-Forked from @ Reply: http://wordpress.org/plugins/reply-to (Removed the non-threaded code, and the images.)
+Forked from @ Reply: http://wordpress.org/plugins/reply-to (Removed the non-threaded code and the images.)
 
 Most of the code is taken from the Custom Smilies plugin by Quang Anh Do which is released under GNU GPL: http://wordpress.org/extend/plugins/custom-smilies/
 
 */
 
 class AtReplyTwoHELF {
+
+	/**
+	 * Construct
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
     public function __construct() {
-        add_action( 'init', array( &$this, 'init' ) );
+	    if (!is_admin() ) {
+		    add_action( 'init', array( &$this, 'init' ) );
+		} else {
+			add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		}
     }
 
+	/**
+	 * Init
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
     public function init() {
-		if (!is_admin()) {
+		if ( get_option( 'thread_comments' ) == '1' ) {
 			 add_action('comment_form', array( $this, 'reply_js'));
 			 add_filter('comment_reply_link', array( $this,'reply'));
-		} else {
-			add_action( 'admin_notices', array( $this, 'admin_notices') );
 		}
 	}
 
-	public function admin_notices() {
+	/**
+	 * Admin Init
+	 *
+	 * @since 2.0
+	 * @access public
+	 */
+    public function admin_init() {
+		add_action( 'admin_notices', array( $this, 'admin_notices') );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts') );
+		add_filter( 'get_comment_text', array( $this, 'admin_show_parent_comment') );
+	}
 
+	/**
+	 * Admin Enqueue Scripts
+	 *
+	 * @since 2.0
+	 * @access public
+	 */
+    public function admin_enqueue_scripts( $hook ) {
+		if ( 'edit-comments.php' != $hook && 'post.php' != $hook ) {
+			return;
+		} else {
+			wp_register_style( 'details-shim-css', plugins_url('/details-shim/details-shim.min.css', __FILE__ ) );
+			wp_enqueue_style( 'details-shim-css' );
+			wp_enqueue_script( 'details-shim-js', plugins_url('/details-shim/details-shim.min.js', __FILE__ ) );
+		}
+	}
+
+	/**
+	 * Admin Notices
+	 * 
+	 * If thereaded comments are off, alert admin
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
+	public function admin_notices() {
 		if ( get_option( 'thread_comments' ) != '1' ) {
 
 		$html = sprintf(
 		    '@Reply Two requires threaded comments to function properly. <a href="%s">Update Settings Now</a>',
 		    admin_url('options-discussion.php')
 		);
-
 			?>
 			<div class="error">
 				<p><?php echo $html; ?></p>
@@ -46,6 +94,34 @@ class AtReplyTwoHELF {
 
 	}
 
+	/**
+	 * Show Parent Comment
+	 * 
+	 * Show the parent comment in the Admin Comments listing
+	 *
+	 * @since 2.0
+	 * @access public
+	 */
+	function admin_show_parent_comment( $content ) {
+	    global $comment;
+
+	    if ( !$comment->comment_parent ) {
+	        return $content;
+	    } else {
+	        $parent_comment_id = get_comment( $comment->comment_parent );	        
+	        $parent_comment_content = '<details><summary>Show Parent Comment ('. str_word_count($parent_comment_id->comment_content) .' words)</summary><blockquote>' . $parent_comment_id->comment_content . '</blockquote></details>';
+	        return $parent_comment_content . $content;
+	    }
+	}
+
+	/**
+	 * Reply JS
+	 * 
+	 * Javascript to insert the @mention when reply is clicked.
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
 	public function reply_js() {
 	?>
 		<script type="text/javascript">
@@ -84,6 +160,14 @@ class AtReplyTwoHELF {
 	<?php
 	}
 
+	/**
+	 * Reply
+	 * 
+	 * Creating the proper link using the JS.
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
 	public function reply($reply_link) {
 		 $comment_ID = '#comment-' . get_comment_ID();
 		 $comment_author = esc_html(get_comment_author());
