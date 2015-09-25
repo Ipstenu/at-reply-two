@@ -15,14 +15,22 @@ When clicked, those links insert the author name and a link to the comment you a
 
 This plugin was heavily simplified from the original.
 
-= Credit=
+= Credit =
 
 Forked from the following:
-
 * http://wordpress.org/extend/plugins/custom-smilies/
 * http://wordpress.org/plugins/reply-to
 
 == Changelog ==
+
+= 2.0 = 
+* Released on WordPress.org
+* Added DocBlox
+* Added 'Show Parent Comment' to dashboard pages
+
+= 1.0.2 = 
+* Adding warning message when Threaded Comments aren't enabled
+* Cleaned code
 
 = 1.0 - Initial Release =
 * Removed images
@@ -35,12 +43,16 @@ No customization needed.
 
 == Frequently Asked Questions ==
 
-= It doesn't work! I activated the plugin but I can't see the reply links. =
+= I activated the plugin but I can't see the reply links. =
 
 If you're not using threaded comments, there is no reply link. And you should get a warning.
 
-= It doesn't work! I can see the reply links but clicking them does nothing. =
+= I can see the reply links but clicking them does nothing. =
 
 Either you have disabled JavaScript in your browser or your WordPress theme is not using the default id for the comments textarea (which is `comment`).
+
+= It shows the full parent comment on the dashboard =
+
+You must be on IE8. There's a details shim for Firefox and IE9+, but I drew the line at supporting IE8. Sorry banks.
 
 == Screenshots ==
