@@ -3,9 +3,10 @@
 Plugin Name: @Reply Two
 Plugin URI: http://halfelf.org/plugins/at-reply-two/
 Description: This plugin allows you to add Twitter-like @reply links to comments.
-Version: 2.0
+Version: 2.0.1
 Author: Mika A. Epstein (Ipstenu)
 Author URI: http://halfelf.org
+Text Domain: at-reply-two
 
 Forked from @ Reply: http://wordpress.org/plugins/reply-to (Removed the non-threaded code and the images.)
 
@@ -27,6 +28,8 @@ class AtReplyTwoHELF {
 		} else {
 			add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		}
+		
+		load_plugin_textdomain( 'at-reply-two' );
     }
 
 	/**
@@ -82,7 +85,7 @@ class AtReplyTwoHELF {
 		if ( get_option( 'thread_comments' ) != '1' ) {
 
 		$html = sprintf(
-		    '@Reply Two requires threaded comments to function properly. <a href="%s">Update Settings Now</a>',
+		    __('@Reply Two requires threaded comments to function properly. <a href="%s">Update Settings Now</a>', 'at-reply-two'),
 		    admin_url('options-discussion.php')
 		);
 			?>
@@ -108,8 +111,11 @@ class AtReplyTwoHELF {
 	    if ( !$comment->comment_parent ) {
 	        return $content;
 	    } else {
-	        $parent_comment_id = get_comment( $comment->comment_parent );	        
-	        $parent_comment_content = '<details><summary>Show Parent Comment ('. str_word_count($parent_comment_id->comment_content) .' words)</summary><blockquote>' . $parent_comment_id->comment_content . '</blockquote></details>';
+	        $parent_comment_id      = get_comment( $comment->comment_parent );
+	        $parent_comment_length  = str_word_count( strip_tags( $parent_comment_id->comment_content ) );
+	        $parent_comment_message = sprintf( _n('Show Parent Comment (%d word):', 'Show Parent Comment (%d words):', $parent_comment_length, 'at-reply-two'), $parent_comment_length );
+	                
+	        $parent_comment_content = '<details><summary>'.$parent_comment_message.'</summary><blockquote>' . $parent_comment_id->comment_content . '</blockquote></details>';
 	        return $parent_comment_content . $content;
 	    }
 	}
