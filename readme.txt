@@ -2,7 +2,7 @@
 Contributors: Ipstenu
 Tags: reply, at-reply, comments
 Requires at least: 4.0
-Tested up to: 4.4
+Tested up to: 4.5
 Stable tag: 2.0.1
 
 This plugin allows you to add @reply links to comments.
@@ -57,6 +57,10 @@ Either you have disabled JavaScript in your browser or your WordPress theme is n
 = It shows the full parent comment on the dashboard =
 
 You must be on IE8. There's a details shim for Firefox and IE9+, but I drew the line at supporting IE8. Sorry banks.
+
+= This doesn't work with WPDiscuz Active =
+
+They rewrote the whole comment interface. It won't work because I'm relying on standard WP features that aren't there. Sorry. I have no plans to fix this.
 
 == Screenshots ==
 
